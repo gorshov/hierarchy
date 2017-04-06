@@ -8,24 +8,21 @@ import org.hibernate.cfg.Configuration;
 import org.hibernate.service.ServiceRegistry;
 
 public class HibernateUtil {
+
     private static HibernateUtil util = null;
     private SessionFactory sessionFactory = null;
     private final ThreadLocal sessions = new ThreadLocal();
 
     private HibernateUtil() {
-        try {
-            Configuration configuration = new Configuration().configure();
-            /*.configure(HibernateUtil.class.getResource("/hibernate.cfg.xml"));*/
-            StandardServiceRegistryBuilder serviceRegistryBuilder = new StandardServiceRegistryBuilder();
-            serviceRegistryBuilder.applySettings(configuration.getProperties());
-            ServiceRegistry serviceRegistry = serviceRegistryBuilder.build();
-            sessionFactory = configuration.buildSessionFactory(serviceRegistry);
-        } catch (Throwable ex) {
-            System.exit(0);
-        }
+        Configuration configuration = new Configuration().configure();
+        StandardServiceRegistryBuilder serviceRegistryBuilder = new StandardServiceRegistryBuilder();
+        serviceRegistryBuilder.applySettings(configuration.getProperties());
+        ServiceRegistry serviceRegistry = serviceRegistryBuilder.build();
+        sessionFactory = configuration.buildSessionFactory(serviceRegistry);
+
     }
 
-    public Session getSession () {
+    public Session getSession() {
         Session session = (Session) sessions.get();
         if (session == null) {
             session = sessionFactory.openSession();
@@ -34,8 +31,8 @@ public class HibernateUtil {
         return session;
     }
 
-    public static synchronized HibernateUtil getHibernateUtil(){
-        if (util == null){
+    public static synchronized HibernateUtil getHibernateUtil() {
+        if (util == null) {
             util = new HibernateUtil();
         }
         return util;
